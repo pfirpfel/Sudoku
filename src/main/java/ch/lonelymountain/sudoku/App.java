@@ -20,21 +20,20 @@ package ch.lonelymountain.sudoku;
  * #L%
  */
 
-import ch.lonelymountain.sudoku.dashboard.VisualSudokuView;
+import ch.lonelymountain.sudoku.GUI.DashboardView;
 import com.airhacks.afterburner.injection.Injector;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
- public class Starter extends Application {
+ public class App extends Application {
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        VisualSudokuView appView = new VisualSudokuView();
+     @Override
+     public void start(Stage stage) throws Exception {
+        DashboardView appView = new DashboardView();
         Scene scene = new Scene(appView.getView());
         stage.setTitle("Sudoku");
-        final String uri = getClass().getResource("starter.css").toExternalForm();
+        final String uri = getClass().getResource("app.css").toExternalForm();
         scene.getStylesheets().add(uri);
         stage.setScene(scene);
         stage.show();

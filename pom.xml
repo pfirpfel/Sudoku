@@ -79,7 +79,7 @@ limitations under the License.
                                 <argument>-createjar</argument>
                                 <argument>-nocss2bin</argument>
                                 <argument>-appclass</argument>
-                                <argument>ch.lonelymountain.sudoku.Starter</argument>
+                                <argument>ch.lonelymountain.sudoku.App</argument>
                                 <argument>-srcdir</argument>
                                 <argument>${project.build.directory}/classes</argument>
                                 <argument>-outdir</argument>
