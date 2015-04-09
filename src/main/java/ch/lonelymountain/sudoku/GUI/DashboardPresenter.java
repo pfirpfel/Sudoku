@@ -50,6 +50,7 @@ public class DashboardPresenter implements Initializable {
     private static final int ADDITIONAL_SPACE = 4;
 
     public void generateFields() {
+        notNullArray();
         int generatePosY = 0;
         int generatePosX = 0;
         for (int s = 0; s < 9; s++) {
@@ -106,8 +107,16 @@ public class DashboardPresenter implements Initializable {
             generatePosY += SIZE_OF_IMPUTBOX + 1;
         }
     }
+    private void notNullArray(){
+        for(int row = 0; row<9;row++){
+            for(int column = 0; column<9;column++){
+                allValues[row][column]=0;
+            }
+        }
+    }
     public void calculate(){
-        Calculator calc = new Calculator(allValues);
+        Calculator calc = new Calculator(allValues,allValues);
+       // calc.printer();
         calc.possibilities();
 
     }
