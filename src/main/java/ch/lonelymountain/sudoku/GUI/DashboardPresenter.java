@@ -107,8 +107,8 @@ public class DashboardPresenter implements Initializable {
         }
     }
     public void calculate(){
-        Calculator calc = new Calculator();
-        calc.possibilities(allValues);
+        Calculator calc = new Calculator(allValues);
+        calc.possibilities();
 
     }
 }
