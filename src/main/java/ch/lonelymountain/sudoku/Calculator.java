@@ -1,12 +1,14 @@
 package ch.lonelymountain.sudoku;
 
+import javax.sound.midi.Soundbank;
+
 /**
  * Created by Arieh on 08.04.2015.
  */
 public class Calculator {
     private Integer values[][];
     private final Integer ORIGINAL_VALUES[][];
-
+     public Integer countwhile = 0;
     public Calculator(Integer[][] values, Integer[][] ORIGINAL_VALUES) {
         this.values = values;
         this.ORIGINAL_VALUES = ORIGINAL_VALUES;
@@ -15,6 +17,7 @@ public class Calculator {
     public void possibilities() {
         for (int row = 0; row < 9; row++) {
             for (int column = 0; column < 9; column++) {
+                printer();
                 if (values[row][column] == 0) {
                     for (int possiblevalue = 1; possiblevalue < 10; possiblevalue++) {
                         if (containerCheck(row, column, possiblevalue) == false && grid(row, column, possiblevalue) == false) {
@@ -24,7 +27,11 @@ public class Calculator {
                         }
                     }
                     if (values[row][column] == 0) {
-                        backwards(row, column);
+                        System.out.println("Call " + row +"  "+ column);
+                        int test[] = testBack(row, column);
+                        row = test[0];
+                        column = test[1];
+                        //  backwards(row, column);
                         //  return;
                     }
                 }
@@ -33,73 +40,58 @@ public class Calculator {
         printer();
     }
 
-    //für mögliche Veränderung der vorherigen Werte
-    public void backwards(int row, int column) {
-        int line = row;
-        int col = column;
-
-        //rückwärts dürch den Array
-        while (values[row][column] == 0) {
-            if (col > 0) {
-                col--;
-                System.out.println(line + " ++++ " + col);
-            } else if (line > 0) {
-                System.out.println(line + " ++++ " + col);
-                col += 8;
-                line--;
-                System.out.println(line + " ++++ " + col);
-            }
-            //probiert die noch möglichen zahlen von s bis 9
-            System.out.println(line + " " + col);
-            for (int s = values[line][col]; s < 9; s++) {
-                if (containerCheck(line, col, s) == false && grid(line, col, s) == false) {
-                    values[line][col] = s;
-                   if(tryCorrect(line, row, col, column)== true){
-                    return;
-                   }
-                } else {
-                    values[line][col] = 0;
+    private int[] testBack(int row, int column) {
+        if (column > 0) {
+            column--;
+        } else if (row > 0) {
+            column += 8;
+            row--;
+        }
+        Boolean pause = true;
+        Boolean valid = false;
+        printer();
+        int pos[] = new int[2];
+        while (pause == true) {
+            //kontrolle ob maximale höhe von vorheriger Zahl erreicht ist.
+            for (int s = values[row][column] + 1; s < 11; s++) {
+                System.out.println("++++++++++++++++++++");
+                if (grid(row, column, s) == true || containerCheck(row, column, s) == true || s>=9) {
+                    valid = true;
                 }
             }
+            //setzt wenn maximale höhe von vorheriger Zahl erreicht ist  auf 0 und holt die davor.
+            if (valid == true) {
+                values[row][column] = 0;
+                if (column > 0) {
+                    column--;
+                } else if (row > 0) {
+                    column += 8;
+                    row--;
+                }
+                valid = false;
+            }
+            printer();
+            System.out.println(row +"   " +column);
+            for(int val = values[row][column]+1; val<10; val++){
+                if (grid(row, column, val) == false && containerCheck(row, column, val) == false) {
+                    values[row][column]=val;
+                    pos[0] = row;
+                    pos[1] = column;
+                    pause = false;
+                    return pos;
+                }else{
+                    values[row][column]=0;
+                    System.out.println("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||7");
+                }
+            }
+            countwhile++;
+            if(countwhile >5000)pause =false;
         }
+        pos[0] = 8;
+        pos[1] = 8;
+        return pos;
     }
-        //probiert neue werte im Bereich zwischen fehler und vorherigen.
-    private Boolean tryCorrect(int startRow, int endRow, int startColumn, int endColumn) {
-        for (int r = startRow; r <= endRow; r++) {
-            for (int c = startColumn; c <= endColumn; c++) {
-                if (values[r][c] == 0) {
-                    for (int newValue = 1; newValue < 10; newValue++) {
-                        if (containerCheck(r, c, newValue) == false && grid(r, c, newValue) == false) {
-                            values[r][c]=newValue;
-                        }
-                    }
-                }
-            }
-        }
-        if(values[endRow][endColumn] != 0){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
-
- /*   private Boolean controllBackwards(int row, int column) {
-        int temporary;
-        for (int r = 0; r <= row; r++) {
-            for (int c = column; c <= column; c++) {
-                temporary = values[r][c];
-                values[r][c] = 10;
-                if (containerCheck(containerRow(r), containerColumn(c), temporary) == true
-                        && grid(row, column, temporary) == true) {
-
-                }
-                values[r][c] = temporary;
-            }
-
-        }
-        return false;
-    }*/
 
     //gibt resultat aus
     public void printer() {
@@ -107,11 +99,13 @@ public class Calculator {
         for (int i = 0; i < 9; i++) {
             for (int s = 0; s < 9; s++) {
                 test += values[i][s] + ":";
-                tes2 += ORIGINAL_VALUES[i][s] + ";";
+
             }
+
             System.out.println(test);
             test = "";
         }
+        System.out.println("-------------------------");
     }
 
     //gibt zurück ob horizontal oder senkrecht enthalten

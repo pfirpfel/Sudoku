@@ -1,4 +1,4 @@
-igniter.fx
+SUDOKU
 ===========
 
 0. Use recent JDK 8 (JavaFX is already in the classpath). You can use the build.sh to temporarily set the JAVA_HOME in the script
