@@ -22,6 +22,7 @@ package ch.lonelymountain.sudoku.GUI;
 
 
 import ch.lonelymountain.sudoku.Calculator;
+import ch.lonelymountain.sudoku.solver.SudokuSolver;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -45,7 +46,7 @@ public class DashboardPresenter implements Initializable {
     }
 
     private final TextField[][] fields = new TextField[9][9];
-    private Integer[][] allValues = new Integer[9][9];
+    private int[][] allValues = new int[9][9];
     private static final int SIZE_OF_IMPUTBOX = 31;
     private static final int ADDITIONAL_SPACE = 4;
 
@@ -115,9 +116,8 @@ public class DashboardPresenter implements Initializable {
         }
     }
     public void calculate(){
-        Calculator calc = new Calculator(allValues);
-       // calc.printer();
-        calc.possibilities();
-
+        SudokuSolver solver = new SudokuSolver();
+        int numSolutions = solver.solveSudoku(allValues, false);
+        System.out.println(numSolutions);
     }
 }
