@@ -28,6 +28,8 @@ package ch.lonelymountain.sudoku.solver;
  */
 public class SudokuSolver implements ISudokuSolver {
 
+    private static final int SOLUTION_SEARCH_LIMIT = 1000;
+
     /* (non-Javadoc)
      * @see ch.lonelymountain.sudoku.solver.ISudokuSolver#solveSudoku(int[][], boolean printSolutions)
      */
@@ -55,6 +57,10 @@ public class SudokuSolver implements ISudokuSolver {
             if(printSolutions) s.print();
             return solutions + 1;
         }
+
+        //
+        if(solutions >= SOLUTION_SEARCH_LIMIT)
+            return solutions;
 
 
 //		//check solvability
