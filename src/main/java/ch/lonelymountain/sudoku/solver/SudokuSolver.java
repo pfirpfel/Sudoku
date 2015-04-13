@@ -1,5 +1,8 @@
 package ch.lonelymountain.sudoku.solver;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * A basic implementation of a sudoku solver.
  *
@@ -30,6 +33,16 @@ public class SudokuSolver implements ISudokuSolver {
 
     private static final int SOLUTION_SEARCH_LIMIT = 1000;
 
+    /**
+     * Returns a list of sudoku solutions as two-dimensional arrays
+     * @return list of sudoku solutions
+     */
+    public ArrayList<int[][]> getSudokus() {
+        return sudokus;
+    }
+
+    private ArrayList<int[][]> sudokus =  new ArrayList<int[][]>();;
+
     /* (non-Javadoc)
      * @see ch.lonelymountain.sudoku.solver.ISudokuSolver#solveSudoku(int[][], boolean printSolutions)
      */
@@ -37,6 +50,7 @@ public class SudokuSolver implements ISudokuSolver {
     public int solveSudoku(int[][] sudoku, boolean printSolutions) {
 
         //construct internal datastructure
+        sudokus.clear();
         Sudoku sudokuObj = new Sudoku(sudoku);
         return this.solve(sudokuObj, 0, 0, printSolutions);
     }
@@ -55,6 +69,7 @@ public class SudokuSolver implements ISudokuSolver {
         //is the sudoku fully solved?
         if(index == 81) {
             if(printSolutions) s.print();
+            sudokus.add(s.getSudoku());
             return solutions + 1;
         }
 
@@ -101,6 +116,20 @@ public class SudokuSolver implements ISudokuSolver {
      * @author Robin Br�gger
      */
     private class Sudoku {
+
+        /**
+         * Get a deep-copy of the sudoku 2d-array
+         * @return deep-copy of the sudoku 2d-array
+         */
+        public int[][] getSudoku() {
+            int[][] copy = new int[field.length][];
+            for(int i = 0; i <field.length; i++){
+                int[] row = field[i];
+                copy[i] = new int[row.length];
+                System.arraycopy(row, 0, copy[i], 0, row.length);
+            }
+            return copy;
+        }
 
         /**
          * Representation of the sudoku. Numbers from 1 to 9 are allowed.
