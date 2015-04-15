@@ -31,7 +31,7 @@ import java.util.Arrays;
  */
 public class SudokuSolver implements ISudokuSolver {
 
-    private static final int SOLUTION_SEARCH_LIMIT = 1000;
+    private static final int SOLUTION_SEARCH_LIMIT = 9001;
 
     /**
      * Returns a list of sudoku solutions as two-dimensional arrays
@@ -41,7 +41,7 @@ public class SudokuSolver implements ISudokuSolver {
         return sudokus;
     }
 
-    private ArrayList<int[][]> sudokus =  new ArrayList<int[][]>();;
+    private ArrayList<int[][]> sudokus =  new ArrayList<int[][]>();
 
     /* (non-Javadoc)
      * @see ch.lonelymountain.sudoku.solver.ISudokuSolver#solveSudoku(int[][], boolean printSolutions)
@@ -68,7 +68,6 @@ public class SudokuSolver implements ISudokuSolver {
 
         //is the sudoku fully solved?
         if(index == 81) {
-            if(printSolutions) s.print();
             sudokus.add(s.getSudoku());
             return solutions + 1;
         }
@@ -76,16 +75,6 @@ public class SudokuSolver implements ISudokuSolver {
         //
         if(solutions >= SOLUTION_SEARCH_LIMIT)
             return solutions;
-
-
-//		//check solvability
-//		for(int i = index; i < 81; i++) {
-//			final int x = i / 9;
-//			final int y = i % 9;
-//			if(s.field[x][y] == 0 && s.getAvailableFor(x, y) == 0) {
-//				return solutions;
-//			}
-//		}
 
         final int x = index / 9;
         final int y = index % 9;
@@ -128,7 +117,9 @@ public class SudokuSolver implements ISudokuSolver {
                 copy[i] = new int[row.length];
                 System.arraycopy(row, 0, copy[i], 0, row.length);
             }
+
             return copy;
+
         }
 
         /**
@@ -253,8 +244,5 @@ public class SudokuSolver implements ISudokuSolver {
         /**
          * Pretty print the current state of the sudoku
          */
-        void print() {
-            SudokuUtils.print(field);
-        }
     }
 }

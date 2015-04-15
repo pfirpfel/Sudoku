@@ -1,44 +1,37 @@
 package ch.lonelymountain.sudoku.GUI;
 
-/*
- * #%L
- * igniter
- * %%
- * Copyright (C) 2013 - 2014 Adam Bien
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-
-
-import ch.lonelymountain.sudoku.Calculator;
 import ch.lonelymountain.sudoku.solver.SudokuSolver;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 
 import java.net.URL;
+import java.util.ArrayList;
+
 import java.util.ResourceBundle;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Font;
+
 @SuppressWarnings("ALL")
-public class DashboardPresenter implements Initializable {
+public class DashboardPresenter implements Initializable{
 
     @FXML
     Pane contentBox;
 
     @FXML
-    Pane previewBox;
+    FlowPane previewBox;
+
+    @FXML
+    ProgressBar progrss;
+
+    @FXML
+    javafx.scene.control.Label countOfPossibillities;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -47,13 +40,16 @@ public class DashboardPresenter implements Initializable {
 
     private final TextField[][] fields = new TextField[9][9];
     private int[][] allValues = new int[9][9];
+    private int[][] calculatedValjues = new int[9][9];
     private static final int SIZE_OF_IMPUTBOX = 31;
     private static final int ADDITIONAL_SPACE = 4;
+    private static final int START_COORDINATE_X = 15;
+    private static final int START_COORDINATE_Y = 10;
 
     public void generateFields() {
         notNullArray();
-        int generatePosY = 0;
-        int generatePosX = 0;
+        int generatePosY = START_COORDINATE_Y;
+        int generatePosX = START_COORDINATE_X;
         for (int s = 0; s < 9; s++) {
             //etwas grösserer Abstand für bessere übersicht
             switch (s) {
@@ -104,20 +100,132 @@ public class DashboardPresenter implements Initializable {
                 });
                 generatePosX += SIZE_OF_IMPUTBOX + 1;
             }
-            generatePosX = 0;
+            generatePosX = START_COORDINATE_X;
             generatePosY += SIZE_OF_IMPUTBOX + 1;
         }
     }
-    private void notNullArray(){
-        for(int row = 0; row<9;row++){
-            for(int column = 0; column<9;column++){
-                allValues[row][column]=0;
+
+    private void notNullArray() {
+        for (int row = 0; row < 9; row++) {
+            for (int column = 0; column < 9; column++) {
+                allValues[row][column] = 0;
             }
         }
     }
+
     public void calculate(){
         SudokuSolver solver = new SudokuSolver();
         int numSolutions = solver.solveSudoku(allValues, false);
-        System.out.println(numSolutions);
+        if (numSolutions>9000){
+            countOfPossibillities.setText("Möglichkeiten: Over 9000");
+        }else{
+            countOfPossibillities.setText("Möglichkeiten: )" + numSolutions);
+        }
+
+        ArrayList<int[][]> sudokus = solver.getSudokus();
+
+//        new Thread(task).start();
+//        task.run();  task.cancel();
+        for (int count = 0; count <= 100; count++) {
+            progrss.setProgress((count / 100));
+            System.out.println(count);
+            drawThumbnail(sudokus.get(count));
+
+            calculatedValjues = sudokus.get(count);
+
+        }
+    }
+//    Task task = new Task<Void>(){
+//        @Override public Void call() {
+//            SudokuSolver solver = new SudokuSolver();
+//            ArrayList<int[][]> sudokus = solver.getSudokus();
+//            int yPos, xPos, value;
+//            String number;
+//            int SIZE = 225;
+//            System.out.println("Testworks?");
+//            FlowPane fullContent = new FlowPane();
+//            for (int count = 0; count <= 100; count++) {
+//              //  calculatedValjues = sudokus.get(count);
+//
+//                System.out.println("Testworks?");
+//                // Draw lines
+//                Pane thumbnail = new Pane();
+//                Canvas canvas = new Canvas(SIZE + 5, SIZE + 5);
+//                GraphicsContext graphic = canvas.getGraphicsContext2D();
+//                for (int d = 1; d <= SIZE + 1; d += SIZE / 9) {
+//                    if ((d == 1) || (d == (SIZE / 9 * 3 + 1)) || (d == (SIZE / 9 * 6 + 1)) || (SIZE + 1 == d)) {
+//                        graphic.setLineWidth(3);
+//                    }
+//                    graphic.strokeLine(d, 0, d, SIZE);
+//                    graphic.strokeLine(0, d, SIZE + 1, d);
+//                    graphic.setLineWidth(1);
+//                }
+//                //draw numbers
+//                graphic.setFont(new Font("Arial", SIZE / 9));
+//                for (int r = 0; r < 9; r++) {
+//                    yPos = r * (SIZE / 9) + (SIZE / 9) - SIZE / 10 / 8;
+//                    for (int c = 0; c < 9; c++) {
+//                        xPos = c * (SIZE / 9) + (SIZE / 9 / 3);
+//                        graphic.strokeText("1", xPos, yPos);
+//
+//                    }
+//
+//                }
+//                thumbnail.getChildren().addAll(canvas);
+//                thumbnail.setOnMouseClicked((event) -> {
+//                   fillSolvedSudokusBackIn(calculatedValjues);
+//                });
+//
+//                fullContent.getChildren().addAll(thumbnail);
+//            }
+//            previewBox.getChildren().addAll(fullContent);
+//            System.out.println("TestworkNot");
+//            return null;
+//        }
+//    };
+
+    //drawing thumbnails for the possible salutions
+    private void drawThumbnail(int[][] sudoku) {
+        int yPos, xPos, value;
+        String number;
+        int SIZE = 225;
+        // Draw lines
+        Pane thumbnail = new Pane();
+        Canvas canvas = new Canvas(SIZE + 5, SIZE + 5);
+        GraphicsContext graphic = canvas.getGraphicsContext2D();
+        for (int d = 1; d <= SIZE + 1; d += SIZE / 9) {
+            if ((d == 1) || (d == (SIZE / 9 * 3 + 1)) || (d == (SIZE / 9 * 6 + 1)) || (SIZE + 1 == d)) {
+                graphic.setLineWidth(3);
+            }
+            graphic.strokeLine(d, 0, d, SIZE);
+            graphic.strokeLine(0, d, SIZE + 1, d);
+            graphic.setLineWidth(1);
+        }
+            //draw numbers
+        graphic.setFont(new Font("Arial", SIZE / 9));
+        for (int r = 0; r < 9; r++) {
+            yPos = r * (SIZE / 9) + (SIZE / 9) - SIZE / 10 / 8;
+            for (int c = 0; c < 9; c++) {
+                xPos = c * (SIZE / 9) + (SIZE / 9 / 3);
+                graphic.strokeText(String.valueOf(sudoku[r][c]), xPos, yPos);
+
+            }
+
+        }
+        thumbnail.getChildren().addAll(canvas);
+        thumbnail.setOnMouseClicked((event) -> {
+            fillSolvedSudokusBackIn(sudoku);
+        });
+        previewBox.getChildren().addAll(thumbnail);
+    }
+
+    //click on thumbnails fills in the salution
+    public void fillSolvedSudokusBackIn(int[][] array) {
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                fields[r][c].setText(String.valueOf(array[r][c]));
+            }
+        }
+
     }
 }
