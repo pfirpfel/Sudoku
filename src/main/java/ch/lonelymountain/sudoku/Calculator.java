@@ -191,8 +191,8 @@ public class Calculator {
 
     //gibt zurück ob Zahl in container enthalten ist.
     private Boolean containerCheck(int row, int column, int size) {
-        int startRow = containerRow(row);
-        int startColumn = containerColumn(column);
+        int startRow = row/3;
+        int startColumn = column/3;
 
         for (int r = startRow; r < startRow + 3; r++) {
             for (int c = startColumn; c < startColumn + 3; c++) {

@@ -1,7 +1,6 @@
 package ch.lonelymountain.sudoku.solver;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A basic implementation of a sudoku solver.
@@ -48,11 +47,47 @@ public class SudokuSolver implements ISudokuSolver {
      */
     @Override
     public int solveSudoku(int[][] sudoku, boolean printSolutions) {
+        for(int r = 0; r<9;r++){
+            for (int c = 0; c<9;c++){
+                if(sudoku[r][c]!=0){
+                    if(CheckValid(sudoku,r,c)){
+                        return 0;
+                    }
+                }
+
+            }
+        }
 
         //construct internal datastructure
         sudokus.clear();
-        Sudoku sudokuObj = new Sudoku(sudoku);
-        return this.solve(sudokuObj, 0, 0, printSolutions);
+    Sudoku sudokuObj = new Sudoku(sudoku);
+    return this.solve(sudokuObj, 0, 0, printSolutions);
+}
+
+    private Boolean CheckValid(int[][] values,int row, int column) {
+        int size = values[row][column];
+        values[row][column] = 0;
+        int startRow = row/3;
+        int startColumn = column/3;
+
+        for (int r = startRow; r < startRow + 3; r++) {
+            for (int c = startColumn; c < startColumn + 3; c++) {
+                if (values[r][c] == size ) {
+                    System.out.println(row +" " +column);
+                    System.out.println(r +" " +c);
+                    System.out.println("Bug1");
+                    return true;
+                }
+            }
+        }
+        for (int i = 0; i < 9; i++) {
+            if (values[row][i] == size || values[i][column] == size) {
+                System.out.println("Bug2");
+                return true;
+            }
+        }
+        values[row][column] = size;
+        return false;
     }
 
     /**

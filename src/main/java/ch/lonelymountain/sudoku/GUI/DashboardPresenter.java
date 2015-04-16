@@ -114,18 +114,25 @@ public class DashboardPresenter implements Initializable{
     }
 
     public void calculate(){
+        int drawings = 100;
         SudokuSolver solver = new SudokuSolver();
         int numSolutions = solver.solveSudoku(allValues, false);
         if (numSolutions>9000){
             countOfPossibillities.setText("Möglichkeiten: Over 9000");
+        }else if(numSolutions == 0){
+            countOfPossibillities.setText("Möglichkeiten:  " + numSolutions);
+            return;
         }else{
-            countOfPossibillities.setText("Möglichkeiten: )" + numSolutions);
+            countOfPossibillities.setText("Möglichkeiten: " + numSolutions);
         }
 
         ArrayList<int[][]> sudokus = solver.getSudokus();
 
 //        new Thread(task).start();
 //        task.run();  task.cancel();
+        if(numSolutions<100){
+            drawings = numSolutions;
+        }
         for (int count = 0; count <= 100; count++) {
             progrss.setProgress((count / 100));
             System.out.println(count);
