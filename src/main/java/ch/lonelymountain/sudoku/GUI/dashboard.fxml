@@ -5,15 +5,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <SplitPane dividerPositions="0.5431034482758621" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="382.0" prefWidth="582.0" scaleShape="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.lonelymountain.sudoku.GUI.DashboardPresenter">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="475.0" prefWidth="317.0">
          <children>
               <Button layoutX="14.0" layoutY="327.0" mnemonicParsing="false" onAction="#calculate" prefHeight="50.0" prefWidth="81.0" text="Calculate" />
             <Pane fx:id="contentBox" layoutX="-6.0" prefHeight="292.0" prefWidth="295.0" AnchorPane.bottomAnchor="183.0" AnchorPane.leftAnchor="-6.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="0.0" />
-            <ProgressBar fx:id="progrss" layoutX="103.0" layoutY="331.0" prefWidth="200.0" progress="0.0" />
+            <ProgressBar fx:id="progrss" layoutX="171.0" layoutY="331.0" prefHeight="23.0" prefWidth="132.0" progress="0.0" />
             <Label fx:id="countOfPossibillities" layoutX="103.0" layoutY="356.0" text="Möglichkeiten: " />
+            <Button layoutX="103.0" layoutY="327.0" mnemonicParsing="false" onAction="#clearSudoku" prefHeight="31.0" prefWidth="62.0" text="Clear" />
          </children>
       </AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0">

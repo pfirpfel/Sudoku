@@ -18,6 +18,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 
+import javax.lang.model.element.Element;
+
 @SuppressWarnings("ALL")
 public class DashboardPresenter implements Initializable{
 
@@ -112,7 +114,14 @@ public class DashboardPresenter implements Initializable{
             }
         }
     }
-
+    public void clearSudoku(){
+        int row;
+        previewBox.getChildren().clear();
+        for(int i = 0; i < 81; i++){
+            row = i/9;
+            fields[row][i-(row*99)].clear();
+        }
+    }
     public void calculate(){
         int drawings = 100;
         SudokuSolver solver = new SudokuSolver();
